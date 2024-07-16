@@ -9,11 +9,20 @@
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
 
-@code {
-    private int currentCount = 0;
+<ul style="margin-top: 2em">
+    <li>Error is null: @(Error is null)</li>
+    <li>Caught Exceptions: @CaughtExceptions</li>
+    <li>Error was null when exception is caught: @ErrorWasNullWhenExceptionWasCaught</li>
+</ul>
 
-    [CascadingParameter]
-    public Error? Error { get; set; }
+@code {
+    private int currentCount;
+
+    [CascadingParameter] public Error? Error { get; set; }
+
+    private int ErrorWasNullWhenExceptionWasCaught { get; set; }
+
+    private int CaughtExceptions { get; set; }
 
     private void IncrementCount()
     {
@@ -28,6 +37,9 @@
         }
         catch (Exception ex)
         {
+            CaughtExceptions++;
+            ErrorWasNullWhenExceptionWasCaught += Error is null ? 1 : 0;
+
             Error?.ProcessError(ex);
         }
     }
